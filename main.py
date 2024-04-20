@@ -3,6 +3,7 @@ from typing import List
 
 import pandas as pd
 from openpyxl import load_workbook
+import matplotlib.pyplot as plt
 
 path = pathlib.Path('./data')
 
@@ -96,3 +97,5 @@ for dataset in datasets:
 
     print(dataset)
     print(dataset.data_frame)
+    dataset.data_frame.plot.scatter(x='avg_x', y='avg_y', c='avg_f')
+    plt.show()
