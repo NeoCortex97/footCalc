@@ -1,9 +1,12 @@
 import pathlib
 from typing import List
 
+import matplotlib.axes
 import pandas as pd
 from openpyxl import load_workbook
 import matplotlib.pyplot as plt
+from matplotlib.patches import Ellipse
+import matplotlib.transforms as transforms
 
 path = pathlib.Path('./data')
 
@@ -27,6 +30,7 @@ class Dataset:
         self.measurement_ranges: List[MeasurementRange] = []
         self.data_frame: pd.DataFrame = None
         self.max_rows: int = 0
+        self.plot: matplotlib.axes.Axes = None
 
     def __repr__(self):
         return (str(self.filename)
@@ -59,43 +63,62 @@ for file in [f for f in path.iterdir() if f.is_file() and f.name.endswith('.xlsx
     datasets[-1].max_rows = max([r.end - r.start for r in datasets[-1].measurement_ranges])
 
 
-# Load data-frames for every range
-for dataset in datasets:
-    for r in dataset.measurement_ranges:
-        df = pd.read_excel(str(dataset.filename),
-                           sheet_name=dataset.sheet_name,
-                           header=r.start - 1,
-                           index_col=0,
-                           usecols='A:E',
-                           nrows=r.end - r.start)
-        r.df = df
+def average(data: list) -> float:
+    pass
 
-    # Merge dataframes
-    dataset.data_frame = pd.DataFrame()
-    dataset.data_frame.index.name = 'Frame'  # Set name of index column
-    dataset.data_frame['t'] = sorted([f.df for f in dataset.measurement_ranges], key=len)[-1]['ms']
-    for index, r in enumerate(dataset.measurement_ranges):
-        dataset.data_frame[f'x{index}'] = r.df['X (mm)']
-        dataset.data_frame[f'y{index}'] = r.df['Y (mm)']
-        dataset.data_frame[f'f{index}'] = r.df[f'Force (N)']
 
-    # Calculate averages for x, y and force
-    dataset.data_frame['avg_x'] = dataset.data_frame.apply(
-        lambda row: sum([row[f'x{i}'] for i in range(len(dataset.measurement_ranges))])/len(dataset.measurement_ranges),
-        axis=1)
-    dataset.data_frame['avg_y'] = dataset.data_frame.apply(
-        lambda row: sum([row[f'y{i}'] for i in range(len(dataset.measurement_ranges))]) / len(
-            dataset.measurement_ranges),
-        axis=1)
-    dataset.data_frame['avg_f'] = dataset.data_frame.apply(
-        lambda row: sum([row[f'f{i}'] for i in range(len(dataset.measurement_ranges))]) / len(
-            dataset.measurement_ranges),
-        axis=1)
+def main():
+    # Load data-frames for every range
+    for dataset in datasets:
+        for r in dataset.measurement_ranges:
+            df = pd.read_excel(str(dataset.filename),
+                               sheet_name=dataset.sheet_name,
+                               header=r.start - 1,
+                               index_col=0,
+                               usecols='A:E',
+                               nrows=r.end - r.start)
+            r.df = df
 
-    # Kill all rows that contain empty values.
-    dataset.data_frame.dropna(axis=0, inplace=True)
+        # Merge dataframes
+        dataset.data_frame = pd.DataFrame()
+        dataset.data_frame.index.name = 'Frame'  # Set name of index column
+        dataset.data_frame['t'] = sorted([f.df for f in dataset.measurement_ranges], key=len)[-1]['ms']
+        for index, r in enumerate(dataset.measurement_ranges):
+            dataset.data_frame[f'x{index}'] = r.df['X (mm)']
+            dataset.data_frame[f'y{index}'] = r.df['Y (mm)']
+            dataset.data_frame[f'f{index}'] = r.df[f'Force (N)']
 
-    print(dataset)
-    print(dataset.data_frame)
-    dataset.data_frame.plot.scatter(x='avg_x', y='avg_y', c='avg_f')
-    plt.show()
+        # Calculate averages for x, y and force
+        dataset.data_frame['avg_x'] = dataset.data_frame.apply(
+            lambda row: sum([row[f'x{i}'] for i in range(len(dataset.measurement_ranges))])/len(dataset.measurement_ranges),
+            axis=1)
+        dataset.data_frame['avg_y'] = dataset.data_frame.apply(
+            lambda row: sum([row[f'y{i}'] for i in range(len(dataset.measurement_ranges))]) / len(
+                dataset.measurement_ranges),
+            axis=1)
+        dataset.data_frame['avg_f'] = dataset.data_frame.apply(
+            lambda row: sum([row[f'f{i}'] for i in range(len(dataset.measurement_ranges))]) / len(
+                dataset.measurement_ranges),
+            axis=1)
+
+        # Kill all rows that contain empty values.
+        # dataset.data_frame.dropna(axis=0, inplace=True)
+
+        print(dataset)
+        print(dataset.data_frame)
+        dataset.plot = dataset.data_frame.plot.scatter(x='avg_x', y='avg_y', c='avg_f')
+
+        # Add Axis lines
+        dataset.plot.axhline(c='grey', lw=1)
+        dataset.plot.axvline(c='grey', lw=1)
+
+        # Draw Ellipse over plot
+        ellipse = Ellipse((0, 0), 5, 8, facecolor='none', edgecolor='red')
+        dataset.plot.add_patch(ellipse)
+
+        # Show plot
+        plt.show()
+
+
+if __name__ == '__main__':
+    main()
