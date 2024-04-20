@@ -46,6 +46,7 @@ for file in [f for f in path.iterdir() if f.is_file() and f.name.endswith('.xlsx
         if not cell.value and active:
             r.end = cell.row
             datasets[-1].measurement_ranges.append(r)
+
             r = MeasurementRange(0, 0)
             active = False
 
