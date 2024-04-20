@@ -7,6 +7,8 @@ from openpyxl import load_workbook
 path = pathlib.Path('./data')
 
 
+# Some Simple wrapper classes to verbalize structure
+
 class MeasurementRange:
     def __init__(self, start: int, end: int):
         self.start = start
@@ -22,6 +24,8 @@ class Dataset:
         self.filename: pathlib.Path = pathlib.Path()
         self.sheet_name: str = ''
         self.measurement_ranges: List[MeasurementRange] = []
+        self.data_frame: pd.DataFrame = None
+        self.max_rows: int = 0
 
     def __repr__(self):
         return (str(self.filename)
@@ -30,7 +34,9 @@ class Dataset:
                 + ', '.join([str(f) for f in self.measurement_ranges]))
 
 
-datasets: List[Dataset] = []
+datasets: List[Dataset] = [] # This contains all files
+
+# Iterate over all files and scan datasets.
 for file in [f for f in path.iterdir() if f.is_file() and f.name.endswith('.xlsx')]:
     wb = load_workbook(file, False, False, False, False, False)
     datasets.append(Dataset())
@@ -49,7 +55,10 @@ for file in [f for f in path.iterdir() if f.is_file() and f.name.endswith('.xlsx
             r = MeasurementRange(0, 0)
             active = False
 
+    datasets[-1].max_rows = max([r.end - r.start for r in datasets[-1].measurement_ranges])
 
+
+# Load data-frames for every range
 for dataset in datasets:
     for r in dataset.measurement_ranges:
         df = pd.read_excel(str(dataset.filename),
@@ -58,12 +67,14 @@ for dataset in datasets:
                            index_col=0,
                            usecols='A:E',
                            nrows=r.end - r.start)
-        print(df)
         r.df = df
 
-
-
-
-
-
-
+    # Merge dataframes
+    dataset.data_frame = pd.DataFrame()
+    dataset.data_frame.index.name = 'Frame'  # Set name of index column
+    dataset.data_frame['t'] = sorted([f.df for f in dataset.measurement_ranges], key=len)[-1]['ms']
+    for index, r in enumerate(dataset.measurement_ranges):
+        dataset.data_frame[f'x{index}'] = r.df['X (mm)']
+        dataset.data_frame[f'y{index}'] = r.df['Y (mm)']
+        dataset.data_frame[f'f{index}'] = r.df[f'Force (N)']
+    print(dataset.data_frame)
