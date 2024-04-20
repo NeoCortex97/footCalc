@@ -77,4 +77,22 @@ for dataset in datasets:
         dataset.data_frame[f'x{index}'] = r.df['X (mm)']
         dataset.data_frame[f'y{index}'] = r.df['Y (mm)']
         dataset.data_frame[f'f{index}'] = r.df[f'Force (N)']
+
+    # Calculate averages for x, y and force
+    dataset.data_frame['avg_x'] = dataset.data_frame.apply(
+        lambda row: sum([row[f'x{i}'] for i in range(len(dataset.measurement_ranges))])/len(dataset.measurement_ranges),
+        axis=1)
+    dataset.data_frame['avg_y'] = dataset.data_frame.apply(
+        lambda row: sum([row[f'y{i}'] for i in range(len(dataset.measurement_ranges))]) / len(
+            dataset.measurement_ranges),
+        axis=1)
+    dataset.data_frame['avg_f'] = dataset.data_frame.apply(
+        lambda row: sum([row[f'f{i}'] for i in range(len(dataset.measurement_ranges))]) / len(
+            dataset.measurement_ranges),
+        axis=1)
+
+    # Kill all rows that contain empty values.
+    dataset.data_frame.dropna(axis=0, inplace=True)
+
+    print(dataset)
     print(dataset.data_frame)
