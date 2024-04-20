@@ -43,7 +43,7 @@ for file in [f for f in path.iterdir() if f.is_file() and f.name.endswith('.xlsx
         if cell.value == 'Frame':
             r.start = cell.row
             active = True
-        if not cell.value and active:
+        if active and cell.value is None:
             r.end = cell.row
             datasets[-1].measurement_ranges.append(r)
             r = MeasurementRange(0, 0)
@@ -54,7 +54,7 @@ for dataset in datasets:
     for r in dataset.measurement_ranges:
         df = pd.read_excel(str(dataset.filename),
                            sheet_name=dataset.sheet_name,
-                           header=r.start,
+                           header=r.start - 1,
                            index_col=0,
                            usecols='A:E',
                            nrows=r.end - r.start)
