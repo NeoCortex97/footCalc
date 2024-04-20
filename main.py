@@ -106,6 +106,17 @@ def populate_common_df(dataset: Dataset):
     calc_avg(dataset.data_frame, 'avg_f', 'f', len(dataset.measurement_ranges))
 
 
+def set_axes(dataset: Dataset):
+    # Get range of x
+    x_min, x_max = calc_axes(dataset.data_frame, 'avg_x')
+
+    # Get range of y
+    y_min, y_max = calc_axes(dataset.data_frame, 'avg_y')
+
+    plt.xlim(x_min, x_max)
+    plt.ylim(y_min, y_max)
+
+
 def main():
     datasets: List[Dataset] = []  # This contains all files
 
@@ -130,15 +141,7 @@ def main():
         dataset.plot.axhline(c='grey', lw=1)
         dataset.plot.axvline(c='grey', lw=1)
 
-        # Set Axis range
-        ## Get min and max value of x dataset
-        x_min, x_max = calc_axes(dataset.data_frame, 'avg_x')
-
-        ## Get min and max value of y dataset
-        y_min, y_max = calc_axes(dataset.data_frame, 'avg_y')
-
-        plt.xlim(x_min, x_max)
-        plt.ylim(y_min, y_max)
+        set_axes(dataset)
 
         # Draw Ellipse over plot
         ellipse = Ellipse((0, 0), 5, 8, facecolor='none', edgecolor='red')
