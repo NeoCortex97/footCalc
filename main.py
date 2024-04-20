@@ -124,7 +124,7 @@ def main():
     for file in [f for f in path.iterdir() if f.is_file() and f.name.endswith('.xlsx')]:
         datasets.append(scan_file(file))
 
-    # Load data-frames for every range
+    # Load .gitkeep-frames for every range
     for dataset in datasets:
         load_ranges(dataset)
 
