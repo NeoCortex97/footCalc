@@ -1,8 +1,8 @@
-from openpyxl import Workbook, load_workbook
+from openpyxl import  load_workbook
 #from openpyxl.utils import get_column_letter
 import pandas as pd
 
-def read_clean_val(messungen, start_list, end_list,Data):
+def read_clean_val(messungen, start_list, end_list, Data):
    i = 0
    data = []
    while i < messungen:
@@ -31,7 +31,7 @@ def get_data ():
       Data_x.append(cell.value)
    for cell in ws['D']:
       Data_y.append(cell.value)
-   return (Data_x, Data_y)
+   return Data_x, Data_y
 
 
 path = "data/Simon_Schmlez_-_Basketball_SLJ_SS_BF_-_21-11-2023_-_Center_of_Force_line.xlsx"
@@ -53,5 +53,5 @@ data_y = read_clean_val(messungen, start_list, end_list, Data_y)
 #print(data_x)
 #print(data_x[2])
 #print(Data_y)
-print(data_y[0])
-print(data_x[0])
+print(data_y[1])
+print(data_x[1])
