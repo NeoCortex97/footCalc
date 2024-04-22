@@ -4,17 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dff5eb4c-10cc-4653-b7ef-cdf96ebc6a9a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/footCalc.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Andre_Muck_-_Basketball_OLJ_BF_AM_-_21-11-2023_-_Center_of_Force_line.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Paskal_Ristevski_-_Basketball_SLJ_BF_PR_-_21-11-2023_-_Center_of_Force_line.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Simon_Schmlez_-_Basketball_SLJ_SS_BF_-_21-11-2023_-_Center_of_Force_line.xlsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+    <list default="true" id="dff5eb4c-10cc-4653-b7ef-cdf96ebc6a9a" name="Changes" comment="some repository cleanup">
+      <change afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +23,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectColorInfo"><![CDATA[{
   "associatedIndex": 2
 }]]></component>
@@ -45,7 +40,8 @@
     "Python.main.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master"
+    "git-widget-placeholder": "master",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -98,6 +94,90 @@
       <option name="presentableId" value="Default" />
       <updated>1713614624046</updated>
     </task>
+    <task id="LOCAL-00001" summary="initial commit">
+      <option name="closed" value="true" />
+      <created>1713618333402</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1713618333402</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Fixed ranges">
+      <option name="closed" value="true" />
+      <created>1713622528371</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1713622528371</updated>
+    </task>
+    <task id="LOCAL-00003" summary="added merging of DataFrames into one.">
+      <option name="closed" value="true" />
+      <created>1713623720656</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1713623720656</updated>
+    </task>
+    <task id="LOCAL-00004" summary="calculating averages">
+      <option name="closed" value="true" />
+      <created>1713624543849</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1713624543849</updated>
+    </task>
+    <task id="LOCAL-00005" summary="added basic plotting">
+      <option name="closed" value="true" />
+      <created>1713625000489</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1713625000489</updated>
+    </task>
+    <task id="LOCAL-00006" summary="added basic plotting">
+      <option name="closed" value="true" />
+      <created>1713627961400</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1713627961400</updated>
+    </task>
+    <task id="LOCAL-00007" summary="code cleanup and refactoring">
+      <option name="closed" value="true" />
+      <created>1713633542381</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1713633542381</updated>
+    </task>
+    <task id="LOCAL-00008" summary="some more refactoring">
+      <option name="closed" value="true" />
+      <created>1713633754075</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1713633754075</updated>
+    </task>
+    <task id="LOCAL-00009" summary="some repository cleanup">
+      <option name="closed" value="true" />
+      <created>1713633953990</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1713633953990</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initial commit" />
+    <MESSAGE value="Fixed ranges" />
+    <MESSAGE value="added merging of DataFrames into one." />
+    <MESSAGE value="calculating averages" />
+    <MESSAGE value="added basic plotting" />
+    <MESSAGE value="code cleanup and refactoring" />
+    <MESSAGE value="some more refactoring" />
+    <MESSAGE value="some repository cleanup" />
+    <option name="LAST_COMMIT_MESSAGE" value="some repository cleanup" />
   </component>
 </project>
