@@ -1,9 +1,37 @@
 import pandas as pd
 from openpyxl import load_workbook
 import numpy as np
-#from openpyxl.utils import get_column_letter
-#import pandas as pd
+import tkinter as tk
+from tkinter import filedialog
 
+#from openpyxl.utils import get_column_letter
+
+def get_file_path():
+    selected_file_path = ""
+    # Dateidialog öffnen, um einen Dateipfad auszuwählen
+    selected_file_path = filedialog.askopenfilename()
+
+    # Den ausgewählten Dateipfad anzeigen
+    if selected_file_path:
+        path_label.config(text="Dateipfad: " + selected_file_path)
+    else:
+        path_label.config(text="Keine Datei ausgewählt")
+    return selected_file_path
+
+def Hauptfenster():
+    root = tk.Tk()
+    root.title("Dateipfad auswählen")
+    root.geometry("900x400")
+    # Button zum Öffnen des Dateidialogs
+    browse_button = tk.Button(root, text="Datei auswählen", command=get_file_path)
+    browse_button.pack(pady=10)
+
+    # Label zur Anzeige des ausgewählten Dateipfads
+    global path_label
+    path_label = tk.Label(root, text="Dateipfad: ")
+    path_label.pack()
+
+    root.mainloop()
 
 def read_clean_val(messungen, start_list, end_list, Data):
 
@@ -66,7 +94,8 @@ def get_df(data):
     )
     return df
 
-path = "data/Simon_Schmlez_-_Basketball_SLJ_SS_BF_-_21-11-2023_-_Center_of_Force_line.xlsx"
+Hauptfenster()
+path = get_file_path()
 wb = load_workbook(path)
 ws = wb.active
 Data_x, Data_y = get_data()
