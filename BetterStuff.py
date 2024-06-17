@@ -2,7 +2,8 @@ import pandas as pd
 from openpyxl import load_workbook
 import numpy as np
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, ttk
+
 path=""
 
 def Fehlermeldung():
@@ -16,15 +17,37 @@ def Fehlermeldung():
     Fehler.mainloop()
 
 def Hilfetext():
-    textroot = tk.Tk()
-    textroot.title("Hilfe")
-    textroot.geometry("900x900")
-    data = open('data/hilftxt', "r")
-    Hilfetxt = tk.Label(textroot, text=data.read())
-    beendenbutton = tk.Button(textroot, text="Schließen", command=textroot.destroy)
-    Hilfetxt.pack(side="left")
-    beendenbutton.pack(anchor='ne',side="top")
-    textroot.mainloop()
+    # Hauptfenster erstellen
+    Hilfetxt = tk.Tk()
+    Hilfetxt.title("Scrollbar Beispiel")
+    Hilfetxt.geometry("900x900")
+
+    # Erstelle eine vertikale Scrollbar
+    scrollverti = ttk.Scrollbar(Hilfetxt, orient="vertical")
+    scrollverti.pack(side="right", fill="y")
+
+    # Erstelle eine horizontale Scrollbar
+    scrollbar_hor = ttk.Scrollbar(Hilfetxt, orient="horizontal")
+    scrollbar_hor.pack(side="bottom", fill="x")
+
+    # Erstelle einen Textbereich, dem die Scrollbars hinzugefügt werden
+    text_area = tk.Text(Hilfetxt, wrap="none", yscrollcommand=scrollverti.set, xscrollcommand=scrollbar_hor.set)
+    text_area.pack(side="left", fill="both", expand=True)
+
+    # Verbinde die Scrollbars mit dem Textbereich
+    scrollverti.config(command=text_area.yview)
+    scrollbar_hor.config(command=text_area.xview)
+
+    # Öffne die Datei und lese den Inhalt im UTF-8-Format
+    with open('data/hilftxt', 'r', encoding='utf-8') as file:
+        data = file.read()
+
+    # Füge den Inhalt der Datei in den Textbereich ein
+    text_area.insert("end", data)
+
+    # Setze den Textbereich in den nur-Lese-Modus
+    text_area.config(state="disabled")
+    Hilfetxt.mainloop()
 
 #from openpyxl.utils import get_column_letter
 
@@ -113,17 +136,11 @@ def get_df(data):
 
     for k in range(len(data)):
         data[k]=np.array(data[k][:minLen])
-
-    frame = []
-    for i in range(minLen):
-        frame.append(i)
-
     #print(frame)
     #print(minLen)
 
     df=pd.DataFrame(
         {
-            'Frames': frame,
             'LinFus1': data[0],
             'LinFus2': data[1],
             'LinFus3': data[2],
@@ -134,29 +151,29 @@ def get_df(data):
     )
     return df
 
-def Fus_mit(df1):
-    mit_left_foot = []
-    mit_right_foot =[]
-    for c in range(df1.shape[0]):
-        mit_left_foot.append(round(((df1.at[c, 'LinFus1'] + df1.at[c, 'LinFus2'] + df1.at[c, 'LinFus3'])/3), 2))
-    for i in range(df1.shape[0]):
-        mit_right_foot.append(round(((df1.at[i, 'RecFus1'] + df1.at[i, 'RecFus2'] + df1.at[i, 'RecFus3'])/3), 2))
-    #print("TEst")
-    frame = []
-    for i in range(len(df1)):
-        frame.append(i)
-    sec_df = pd.DataFrame(
-        {
-            'kek': frame,
-            'Mit_Left_Val': mit_left_foot,
-            'Mit_Right_Val': mit_right_foot
-        }
-    )
-    #print("2Test")
-    dfMerge = df1.merge(sec_df, how='inner', right_on='kek', left_on='Frames')
-    dfMerge.drop('kek',axis=1, inplace=True)
-    #print(dfMerge)
-    return dfMerge
+def Fus_mit(df_in):
+    begin = round(len(df_in) * (0.05)/2)
+    back = round(len(df_in)-begin)
+
+    #df_sort = df_in.apply(lambda x: x.sort_values().values)
+    df_sort = pd.DataFrame(np.sort(df_in.values, axis=0), index=df_in.index, columns=df_in.columns)
+    df_out = df_sort.take([begin, back])
+    #min_max = df_out['LinFus1'].tolist()
+    min_max = []
+    for column in df_out.columns:
+        li = df_out[column].tolist()
+        min_max.append(li)
+    dist = []
+    for i in range(len(min_max)):
+        if min_max[i][0] >= min_max[i][1] :
+            dist.append(round(min_max[i][0] - min_max[i][1], 2))
+        else:
+            dist.append(round(min_max[i][1] - min_max[i][0], 2))
+
+    mid_val =[round((dist[0] + dist[1] + dist[2])/3, 2), round((dist[3] + dist[4] + dist[5])/3, 2)]
+    print(dist)
+
+    return df_out, mid_val
 
 def check_path():
     global path
@@ -181,13 +198,20 @@ def auswerutng() :
         messungen = (len(start_list))
         print("Anzahl der Messungen: ", messungen)
 
-        df_x = Fus_mit(get_df(read_clean_val(messungen, start_list, end_list, Data_x)))
-        df_y = Fus_mit(get_df(read_clean_val(messungen, start_list, end_list, Data_y)))
-        print(df_x)
-        print(df_y)
+        df_x = get_df(read_clean_val(messungen, start_list, end_list, Data_x))
+        df_y = get_df(read_clean_val(messungen, start_list, end_list, Data_y))
+        #print(df_x)
+        #print(df_y)
+        df_x_sort, mid_val_x = Fus_mit(df_x)
+        df_y_sort, mid_val_y = Fus_mit(df_y)
+        print(df_x_sort)
+        print(df_y_sort)
+
+        print(mid_val_x)
+        print(mid_val_y)
 
         #ausgabe des data Frames
-        daten_label = tk.Label(datenausertung, text=""+df_x.to_string())
+        daten_label = tk.Label(datenausertung, text="" + df_x_sort.to_string() + "\n\n Ovalerdurchmesser Links (X in mm):" + str(mid_val_x[0]) + "\t\tOvalerdurchmesser Links (Y in mm):" + str(mid_val_y[0]) + "\n\nOvalerdurchmesser Rechts (X in mm):" + str(mid_val_x[1]) + "\t\tOvalerdurchmesser Rechts (Y in mm):" + str(mid_val_y[1]))
         daten_label.pack()
         datenausertung.mainloop()
 
